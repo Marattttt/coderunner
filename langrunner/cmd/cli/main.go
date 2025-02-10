@@ -22,11 +22,17 @@ func main() {
 	runner := runner.GoRunner{Conf: *conf.Go, Manager: manager, Logger: appLogger}
 
 	res, err := runner.RunCode(appCtx, []byte(`
-	package main
-	import "fmt"
-	func main() {
-		fmt.Println("Hello world")
-	}
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	fmt.Println(os.Environ())
+}
+
 	`))
 
 	checkFatal(err, "Running code")

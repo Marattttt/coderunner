@@ -88,7 +88,7 @@ func (r *RuntimeManager) CreateSafeEnv(ctx context.Context, u *user.User, name s
 	}
 
 	cmd := exec.CommandContext(ctx, name, args...)
-	cmd.Env = nil
+	cmd.Env = append(r.conf.EnvVars, "USER="+u.Username, "HOME="+u.HomeDir)
 	cmd.Dir = u.HomeDir
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
 
@@ -173,5 +173,5 @@ func (r *RuntimeManager) ReleaseUser(u *user.User) {
 	}
 
 	r.busyUsers[i] = r.busyUsers[len(r.busyUsers)-1]
-	r.busyUsers = r.busyUsers[:len(r.busyUsers)-2]
+	r.busyUsers = r.busyUsers[:len(r.busyUsers)-1]
 }
