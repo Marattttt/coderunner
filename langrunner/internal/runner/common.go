@@ -14,8 +14,8 @@ import (
 
 type RunResult struct {
 	ExitCode   int           `json:"exitCode"`
-	Stdout     []byte        `json:"stdout"`
-	Stderr     []byte        `json:"stderr"`
+	Stdout     string        `json:"stdout"`
+	Stderr     string        `json:"stderr"`
 	TimeTook   time.Duration `json:"timeTook"`
 	TimeTookMs int64         `json:"timeTookMs"`
 	Extra      *any          `json:"extra,omitempty"`

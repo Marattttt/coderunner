@@ -24,6 +24,14 @@ type GoRunner struct {
 	Logger  *slog.Logger
 }
 
+func NewGoRunner(logger *slog.Logger, conf config.GoRunnerConfig, manager *RuntimeManager) *GoRunner {
+	return &GoRunner{
+		Conf:    conf,
+		Manager: manager,
+		Logger:  logger,
+	}
+}
+
 func (g *GoRunner) RunCode(ctx context.Context, code []byte) (*RunResult, error) {
 	g.Logger.Debug(
 		"Using scripts",
@@ -109,8 +117,8 @@ func (g *GoRunner) runCurrentDir(ctx context.Context, u *user.User) (*RunResult,
 
 	res := RunResult{
 		ExitCode:   output.ExitCode,
-		Stdout:     []byte(output.Stdout),
-		Stderr:     []byte(output.Stderr),
+		Stdout:     output.Stdout,
+		Stderr:     output.Stderr,
 		TimeTook:   end.Sub(startAt),
 		TimeTookMs: end.Sub(startAt).Milliseconds(),
 	}
