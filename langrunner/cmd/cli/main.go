@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/Marattttt/new_new_portfolio/langrunner/internal/config"
-	"github.com/Marattttt/new_new_portfolio/langrunner/internal/runner"
+	"github.com/Marattttt/coderunner/langrunner/internal/config"
+	"github.com/Marattttt/coderunner/langrunner/internal/runner"
 )
 
 func main() {

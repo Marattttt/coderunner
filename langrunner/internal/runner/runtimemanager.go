@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Marattttt/new_new_portfolio/langrunner/internal/config"
+	"github.com/Marattttt/coderunner/langrunner/internal/config"
 )
 
 var ErrNoFreeUsers = fmt.Errorf("no free users")
