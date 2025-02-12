@@ -1,10 +1,12 @@
 import ActionButton from "../components/common/ActionButton";
+import LanguageSelect from "../components/features/LanguageSelect";
+import {Languages }from "../constants"
 
 const Editor = () => {
 	return (
 		<div className="flex flex-col p-10 sm:p-10 gap-y-32 bg-bg-main w-full">
 			<div className="flex flex-wrap justify-between w-full">
-				<span> Language select </span>
+				<LanguageSelect languages={Languages} onChange={(s) => console.log(`${s} selected`)}/>
 				<ActionButton onClick={() => alert('action btn')} >
 					Run!
 				</ActionButton>

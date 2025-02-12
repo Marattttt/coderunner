@@ -6,7 +6,6 @@ function App() {
 		<Navbar />
 		<Editor />
 	</>)
-
 }
 
 export default App
