@@ -1,9 +1,12 @@
+import Navbar from "./components/common/Navbar"
+import Editor from "./pages/Editor"
+
 function App() {
-	return (
-		<h1 className="text-red-500">
-			Hello Tailwind
-		</h1>
-	)
+	return (<>
+		<Navbar />
+		<Editor />
+	</>)
+
 }
 
 export default App
