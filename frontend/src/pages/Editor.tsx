@@ -9,21 +9,21 @@ const Editor = () => {
 	const [language, setLanguage] = useState(Languages[0])
 
 	return (
-		<div className="flex flex-col p-10 sm:p-10 gap-y-32 bg-bg-main w-full">
+		<div className="flex flex-col py-5 px-2 sm:p-8 gap-y-8 bg-bg-main w-full sm:h-screen">
 			<div className="flex flex-wrap justify-between w-full">
 				<LanguageSelect languages={Languages} onChange={(l) => setLanguage(l)}/>
 				<ActionButton onClick={() => alert('action btn')} >
 					Run!
 				</ActionButton>
 			</div>
-			<div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-items-stretch">
+			<div className="flex flex-col sm:flex-row gap-2 justify-items-stretch h-svh sm:h-full">
 				<CodeEditor 
 					code={code} 
 					languageId={language.id}
 					onChange={(c) => code = c}
-					className="w-full h-24 text-text-primary bg-bg-secondary"
+					className="w-full h-full text-text-primary bg-bg-secondary"
 				/>
-				<div className="h-24 w-full bg-bg-secondary" />
+				<div className="w-full h-full bg-bg-secondary"/>
 			</div>
 		</div >
 	)

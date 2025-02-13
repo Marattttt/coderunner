@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import Prism from 'prismjs'
 import Editor from "react-simple-code-editor";
 import 'prismjs/components/prism-clike'
@@ -25,6 +25,17 @@ const CodeEditor: React.FC<editorProps> = ({
 }) => {
 	const [rawCode, setCode] = useState(code)
 
+	  const containerRef = useRef(null);
+  
+  const handleContainerClick = (_: any) => {
+	// Editor component is a thin wrapper around textarea,
+	  // so even if this is a hack, it works well
+    //@ts-ignore
+    const textarea = containerRef.current!.querySelector('textarea');
+    if (textarea) {
+      textarea.focus();
+    }
+  };
 	const addHighlght = (code: string) => {
 		return Prism.highlight(
 			code,
@@ -34,7 +45,11 @@ const CodeEditor: React.FC<editorProps> = ({
 	}
 
 	return (
-		<div className={className ?? '' + ` language-${prismLanguages[languageId]}`}>
+		<div 
+			className={className ?? '' + ` language-${prismLanguages[languageId]}`}
+			ref={containerRef}
+			onClick={handleContainerClick}
+		>
 			<Editor
 				value={rawCode}
 				onValueChange={(c) => {
