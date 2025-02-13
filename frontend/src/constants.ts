@@ -7,3 +7,5 @@ export const Languages: Language[] = [
 	{ id: 'go', name: "Go" },
 	{ id: 'js', name: "JavaScript" }
 ]
+
+export const EditorUpdateDelay = 500;
