@@ -9,3 +9,5 @@ export const Languages: Language[] = [
 ]
 
 export const EditorUpdateDelay = 500;
+
+export const CODERUNNER_API_URL = import.meta.env.CODERUNNER_API_URL
