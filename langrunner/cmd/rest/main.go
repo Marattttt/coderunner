@@ -28,6 +28,12 @@ func main() {
 		handlerParentContextMiddeware(ctx),
 		middleware.RequestID(),
 		requestLogMiddleware(logger),
+		middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins:     []string{"http://localhost:5173"},
+			AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderContentType},
+			AllowMethods:     []string{http.MethodGet, http.MethodPost},
+			AllowCredentials: true,
+		}),
 	)
 
 	runtimeManager := runner.NewRuntimeManager(&conf.RunnerConig, logger)
