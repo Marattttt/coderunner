@@ -2,28 +2,49 @@ import { useState } from "react";
 import ActionButton from "../components/common/ActionButton";
 import CodeEditor from "../components/features/CodeEditor";
 import LanguageSelect from "../components/features/LanguageSelect";
-import {Languages }from "../constants"
+import { Languages } from "../constants"
+import { useQuery } from "@tanstack/react-query";
+import runCode from "../api/coderunner/runCode";
 
 const Editor = () => {
-	let code = ''
+	// Not a useState, due to CodeEditor handling the rerender on its own
+	const [code, setCode] = useState('')
 	const [language, setLanguage] = useState(Languages[0])
+
+	const outputQuery = useQuery({
+		queryKey: [],
+		queryFn: () => runCode(code, language.id),
+		enabled: false,
+		retry: false,
+	})
+
+	const executeCode = () => {
+		outputQuery.refetch({
+			cancelRefetch: true
+		})
+	}
+
+	console.log(outputQuery.isSuccess ? outputQuery.data : outputQuery.error)
 
 	return (
 		<div className="flex flex-col py-5 px-2 sm:p-8 gap-y-8 bg-bg-main w-full sm:h-screen">
 			<div className="flex flex-wrap justify-between w-full">
-				<LanguageSelect languages={Languages} onChange={(l) => setLanguage(l)}/>
-				<ActionButton onClick={() => alert('action btn')} >
+				<LanguageSelect languages={Languages} onChange={(l) => setLanguage(l)} />
+				<ActionButton
+					onClick={executeCode}
+					disabled={outputQuery.isLoading}
+				>
 					Run!
 				</ActionButton>
 			</div>
 			<div className="flex flex-col sm:flex-row gap-2 justify-items-stretch h-svh sm:h-full">
-				<CodeEditor 
-					code={code} 
+				<CodeEditor
+					code={code}
 					languageId={language.id}
-					onChange={(c) => code = c}
+					onChange={(c) => setCode(c)}
 					className="w-full h-full text-text-primary bg-bg-secondary"
 				/>
-				<div className="w-full h-full bg-bg-secondary"/>
+				<div className="w-full h-full bg-bg-secondary" />
 			</div>
 		</div >
 	)

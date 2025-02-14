@@ -19,7 +19,14 @@ const responseSchema = z.object({
 	timeTookMs: z.number().int(),
 })
 
-export default async function runCode(code: string, lang: string) {
+export interface CodeRunResponce {
+    exitCode: number;
+    stdout: string;
+    stderr: string;
+    timeTookMs: number;
+}
+
+export default async function runCode(code: string, lang: string): Promise<CodeRunResponce> {
 	const url = CODERUNNER_API_URL + '/run';
 
 	const body = {
@@ -27,11 +34,13 @@ export default async function runCode(code: string, lang: string) {
 		language: lang,
 	}
 
+	console.debug(`Fetching ${url} with params ${JSON.stringify(body)}`)
+
 	const resp = await fetch(url, {
 		method: 'POST',
-		headers: [
-			['Content-Type', 'application/json'],
-		],
+		headers: {
+			'Content-Type': 'application/json',
+		},
 		body: JSON.stringify(body)
 	})
 
