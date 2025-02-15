@@ -22,7 +22,7 @@ return(
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-200">
+        <div className="absolute z-10 left-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-200">
           {languages.map((lang) => (
             <button
               key={lang.id}
