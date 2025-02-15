@@ -5,6 +5,7 @@ import LanguageSelect from "../components/features/LanguageSelect";
 import { Languages } from "../constants"
 import { useQuery } from "@tanstack/react-query";
 import runCode from "../api/coderunner/runCode";
+import CodeOutput from "../components/features/CodeOutput";
 
 const Editor = () => {
 	// Not a useState, due to CodeEditor handling the rerender on its own
@@ -44,7 +45,11 @@ const Editor = () => {
 					onChange={(c) => setCode(c)}
 					className="w-full h-full text-text-primary bg-bg-secondary"
 				/>
-				<div className="w-full h-full bg-bg-secondary" />
+				<CodeOutput
+					stdout={outputQuery.data?.stdout}
+					stderr={outputQuery.data?.stderr}
+					error={outputQuery.error?.message}
+				/>
 			</div>
 		</div >
 	)
