@@ -4,10 +4,12 @@ interface CodeOutputParams {
 	stdout?: string
 	stderr?: string
 	error?: string
+	className?: string
 }
 
-const CodeOutput: React.FC<CodeOutputParams> = ({stdout, stderr, error}) => {
-	return (<div className="h-full w-full flex flex-col overflow-auto gap-y-8 p-8 bg-bg-secondary">
+const CodeOutput: React.FC<CodeOutputParams> = ({stdout, stderr, error, className}) => {
+	return (<div
+		className={className + " flex flex-col overflow-auto gap-y-4"}>
 		{stdout && 
 			<pre className="text-text-stdout">
 				------<br/>

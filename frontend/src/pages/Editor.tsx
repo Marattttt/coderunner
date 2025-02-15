@@ -28,7 +28,7 @@ const Editor = () => {
 	console.log(outputQuery.isSuccess ? outputQuery.data : outputQuery.error)
 
 	return (
-		<div className="flex flex-col py-5 px-2 sm:p-8 gap-y-8 bg-bg-main w-full sm:h-screen">
+		<div className="flex flex-col py-8 px-2 sm:px-8 gap-y-4 bg-bg-main w-full sm:h-screen">
 			<div className="flex flex-wrap justify-between w-full">
 				<LanguageSelect languages={Languages} onChange={(l) => setLanguage(l)} />
 				<ActionButton
@@ -43,12 +43,13 @@ const Editor = () => {
 					code={code}
 					languageId={language.id}
 					onChange={(c) => setCode(c)}
-					className="w-full h-full text-text-primary bg-bg-secondary"
+					className="w-full h-full py-4 px-2 text-text-primary bg-bg-secondary"
 				/>
 				<CodeOutput
 					stdout={outputQuery.data?.stdout}
 					stderr={outputQuery.data?.stderr}
 					error={outputQuery.error?.message}
+					className="h-full w-full py-4 px-2 bg-bg-secondary"
 				/>
 			</div>
 		</div >
