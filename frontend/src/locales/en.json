@@ -1,4 +1,10 @@
 {
+	"nav": {
+		"title": "Coderunner",
+		"editor": "Editor",
+		"about": "About"
+	},
+
 	"editor": {
 		"runbtn": "Run!"
 	},
