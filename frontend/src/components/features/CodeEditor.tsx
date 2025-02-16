@@ -46,7 +46,7 @@ const CodeEditor: React.FC<editorProps> = ({
 
 	return (
 		<div
-			className={className ?? '' + `overflow-y-auto language-${prismLanguages[languageId]}`}
+			className={(className ?? '') + ` font-code overflow-y-auto language-${prismLanguages[languageId]}`}
 			ref={containerRef}
 			onClick={handleContainerClick}
 		>

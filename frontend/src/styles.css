@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Quicksand:wght@500&family=Sarala:wght@400;700&display=swap');
+
 @import "tailwindcss";
 @theme {
 	--color-text-primary: #f5f4f4;
@@ -10,4 +12,8 @@
 	--color-bg-main: #232d3b;
 	--color-bg-secondary: #151b23;
 	--color-bg-accent: #0c5f42;
+
+	--font-code: "FIra Mono", serif;
+	--font-heading: "Sarala",serif; 
+	--default-font-family: "Quicksand", serif;
 }

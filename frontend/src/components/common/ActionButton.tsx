@@ -12,7 +12,7 @@ const ActionButton: React.FC<ButtonProps> = ({ onClick, children, disabled }) =>
 			disabled={disabled}
 			className={`
 				px-6 py-2 bg-bg-accent 
-				font-bold text-xl text-text-primary rounded-xl 
+				text-xl text-text-primary rounded-xl 
 				transition duration-200
 				border border-transparent
 				hover:border-text-primary
