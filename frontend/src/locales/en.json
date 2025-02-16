@@ -24,6 +24,10 @@
 							"i18next",
 							"TailwindCSS"
 						]
+					},
+					{
+						"name": "Plan to add",
+						"stack": ["Russian locale"]
 					}
 				]
 			},
