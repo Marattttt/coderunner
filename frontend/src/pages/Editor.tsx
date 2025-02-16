@@ -8,6 +8,7 @@ import runCode from "../api/coderunner/runCode";
 import CodeOutput from "../components/features/CodeOutput";
 
 const Editor = () => {
+	// Not a useState, due to CodeEditor handling the rerender on its own
 	const [code, setCode] = useState('')
 	const [language, setLanguage] = useState(Languages[0])
 
