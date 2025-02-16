@@ -25,8 +25,6 @@ const Editor = () => {
 		})
 	}
 
-	console.log(outputQuery.isSuccess ? outputQuery.data : outputQuery.error)
-
 	return (
 		<div className="flex flex-col py-8 px-2 sm:px-8 gap-y-4 bg-bg-main w-full sm:h-screen">
 			<div className="flex flex-wrap justify-between w-full">
