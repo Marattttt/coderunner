@@ -6,8 +6,11 @@ import { Languages } from "../constants"
 import { useQuery } from "@tanstack/react-query";
 import runCode from "../api/coderunner/runCode";
 import CodeOutput from "../components/features/CodeOutput";
+import { useTranslation } from "react-i18next";
 
 const Editor = () => {
+	const {t} = useTranslation();
+
 	// Not a useState, due to CodeEditor handling the rerender on its own
 	const [code, setCode] = useState('')
 	const [language, setLanguage] = useState(Languages[0])
@@ -27,13 +30,13 @@ const Editor = () => {
 
 	return (
 		<div className="flex flex-col py-8 px-2 sm:px-8 gap-y-4 bg-bg-main w-full sm:h-screen">
-			<div className="flex flex-wrap justify-between w-full">
+			<div className="flex flex-wrap justify-between w-full font-bold">
 				<LanguageSelect languages={Languages} onChange={(l) => setLanguage(l)} />
 				<ActionButton
 					onClick={executeCode}
 					disabled={outputQuery.isLoading}
 				>
-					Run!
+					{t('editor.runbtn')}
 				</ActionButton>
 			</div>
 			<div className="flex flex-col sm:flex-row gap-2 justify-items-stretch h-svh sm:h-full">

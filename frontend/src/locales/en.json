@@ -1,4 +1,8 @@
 {
+	"editor": {
+		"runbtn": "Run!"
+	},
+
 	"about": {
 		"title": "Technology stack:",
 		"stack": [
