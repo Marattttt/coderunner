@@ -14,6 +14,7 @@ const LinkButton: React.FC<linkbtnprops> = ({ text }) => {
 		</button>
 	)
 }
+
 const Navbar = () => {
 	return (
 		<nav className="flex justify-between w-full px-4 sm:px-10 h-[64px] top-0 left-0 font-heading text-text-primary bg-bg-dark">

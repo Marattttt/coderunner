@@ -1,0 +1,63 @@
+{
+	"about": {
+		"title": "Technology stack:",
+		"stack": [
+			{
+				"title": "Frontend",
+				"items": [
+					{
+						"name": "Current",
+						"stack": [
+							"React.js",
+							"TypeScript",
+							"Vite",
+							"i18next",
+							"TailwindCSS"
+						]
+					}
+				]
+			},
+			{
+				"title": "Backend",
+				"items": [
+					{
+						"name": "Current",
+						"stack": [
+							"Go",
+							"Echo",
+							"Docker"
+						]
+					},
+					{
+						"name": "Plan to add",
+						"stack": [
+							"PostgreSQL",
+							"Custom authentication"
+						]
+					}
+				]
+			},
+			{
+				"title": "Infrastructure",
+				"items": [
+					{
+						"name": "Current",
+						"stack": [
+							"Cloudflare CDN",
+							"Docker compose",
+							"AWS EC2"
+						]
+					},
+					{
+						"name": "Plan to add",
+						"stack": [
+							"AWS MQ for RabbitMQ",
+							"AWS Elastic Kubernetes Service",
+							"Log collection (Loki)"
+						]
+					}
+				]
+			}
+		]
+	}
+}
