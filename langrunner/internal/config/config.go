@@ -11,6 +11,7 @@ import (
 
 type AppConfig struct {
 	RunnerConig
+	Port     int    `env:"PORT,default=8080"`
 }
 
 type RunnerConig struct {

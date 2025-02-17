@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -29,7 +30,7 @@ func main() {
 		middleware.RequestID(),
 		requestLogMiddleware(logger),
 		middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins:     []string{"http://localhost:5173"},
+			AllowOrigins:     []string{"*"},
 			AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderContentType},
 			AllowMethods:     []string{http.MethodGet, http.MethodPost},
 			AllowCredentials: true,
@@ -39,7 +40,10 @@ func main() {
 	runtimeManager := runner.NewRuntimeManager(&conf.RunnerConig, logger)
 	e.POST("/run", runHandler(conf, logger, runtimeManager))
 
-	checkFail(e.Start(":8080"), "Running server")
+	checkFail(
+		e.Start(fmt.Sprintf(":%d", conf.Port)),
+		"Running server",
+	)
 }
 
 func runHandler(conf *config.AppConfig, logger *slog.Logger, man *runner.RuntimeManager) echo.HandlerFunc {

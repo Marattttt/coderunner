@@ -1,0 +1,30 @@
+services:
+  front:
+    image: <Image url>
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - gorunner
+
+    networks:
+      - app_network
+
+  gorunner:
+    image: <Image url>
+    restart: always
+    ports:
+      - "8080:8080"
+
+
+    environment:
+      - ENABLED_LANGS="go"
+      # Other configuration
+
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
