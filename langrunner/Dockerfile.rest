@@ -11,6 +11,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o ./server ./cmd/rest
+RUN go build ./cmd/rest
 
-ENTRYPOINT ["./server"]
+ENTRYPOINT ["./rest"]
