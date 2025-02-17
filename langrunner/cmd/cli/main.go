@@ -26,13 +26,26 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"io/ioutil"
+	"net/http"
 )
 
 func main() {
-	fmt.Println(os.Environ())
-}
+	resp, err := http.Get("https://www.google.com")
+	if err != nil {
+		fmt.Println("Error fetching Google:", err)
+		return
+	}
+	defer resp.Body.Close()
 
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
+		return
+	}
+
+	fmt.Println(string(body))
+}
 	`))
 
 	checkFatal(err, "Running code")

@@ -2,8 +2,13 @@ FROM golang:1.23
 
 WORKDIR /init
 
+RUN apt-get update && apt-get install -y iptables
+
 COPY ./scripts/init_container.sh ./
 RUN bash ./init_container.sh
+
+COPY ./scripts/pre_start.sh ./
+RUN chmod +x ./pre_start.sh
 
 WORKDIR /app
 
@@ -13,4 +18,4 @@ RUN go mod download
 COPY . .
 RUN go build -o ./cliApp ./cmd/cli/main.go 
 
-ENTRYPOINT ["./cliApp"]
+ENTRYPOINT ["sh", "-c", "/init/pre_start.sh && ./cliApp"]
