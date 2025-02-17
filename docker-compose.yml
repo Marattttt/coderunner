@@ -1,6 +1,6 @@
 services:
   front:
-    image: <Image url>
+    image: "${FRONTEND_IMAGE_URL}"
     restart: always
     ports:
       - "3000:80"
@@ -11,7 +11,7 @@ services:
       - app_network
 
   gorunner:
-    image: <Image url>
+    image:  "${GORUNNER_IMAGE_URL}"
     restart: always
     ports:
       - "8080:8080"
