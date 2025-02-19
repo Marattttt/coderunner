@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"os"
 	"os/exec"
 	"os/user"
 	"slices"
@@ -88,7 +89,7 @@ func (r *RuntimeManager) CreateSafeEnv(ctx context.Context, u *user.User, name s
 	}
 
 	cmd := exec.CommandContext(ctx, name, args...)
-	cmd.Env = append(r.conf.EnvVars, "USER="+u.Username, "HOME="+u.HomeDir)
+	cmd.Env = append(r.conf.EnvVars, "USER="+u.Username, "HOME="+u.HomeDir, "PATH="+os.Getenv("PATH"))
 	cmd.Dir = u.HomeDir
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
 
@@ -156,6 +157,7 @@ func (r *RuntimeManager) AcquireUser() (*user.User, error) {
 		return nil, ErrNoFreeUsers
 	}
 
+	fmt.Printf("Looking up free user %s\n", *username)
 	u, err := user.Lookup(*username)
 	if err != nil {
 		return nil, fmt.Errorf("user not found: %s", *username)

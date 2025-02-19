@@ -1,14 +1,4 @@
-FROM golang:1.23
-
-WORKDIR /init
-
-RUN apt-get update && apt-get install -y iptables
-
-COPY ./scripts/init_container.sh ./
-RUN bash ./init_container.sh
-
-COPY ./scripts/pre_start.sh ./
-RUN chmod +x ./pre_start.sh
+FROM golang:1.23 AS builder
 
 WORKDIR /app
 
@@ -17,5 +7,23 @@ RUN go mod download
 
 COPY . .
 RUN go build -o ./cliApp ./cmd/cli/main.go 
+
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y iptables
+
+WORKDIR /init 
+
+COPY ./scripts/init_container.sh ./
+RUN bash ./init_container.sh
+
+COPY ./scripts/pre_start.sh /init/pre_start.sh
+RUN chmod +x /init/pre_start.sh
+
+WORKDIR /app 
+
+COPY --from=builder /app/cliApp .
+
+RUN which python
 
 ENTRYPOINT ["sh", "-c", "/init/pre_start.sh && ./cliApp"]

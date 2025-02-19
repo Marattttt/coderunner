@@ -7,8 +7,8 @@ useradd -r \
     -s /usr/sbin/nologin \
     gouser
 
-# Verify the user was created
-id gouser || echo "Failed to create user"
-
-# Display user information
-grep gouser /etc/passwd
+# # Verify the user was created
+# id gouser || {echo "Failed to create user" && exit 1}
+#
+# # Display user information
+# grep gouser /etc/passwd

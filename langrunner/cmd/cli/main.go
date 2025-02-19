@@ -19,33 +19,10 @@ func main() {
 	appLogger := conf.CreateLogger()
 
 	manager := runner.NewRuntimeManager(&conf.RunnerConig, appLogger)
-	runner := runner.GoRunner{Conf: *conf.Go, Manager: manager, Logger: appLogger}
+	runner := runner.PyRunner{Conf: *conf.Python, Manager: manager, Logger: appLogger}
 
 	res, err := runner.RunCode(appCtx, []byte(`
-package main
-
-import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-)
-
-func main() {
-	resp, err := http.Get("https://www.google.com")
-	if err != nil {
-		fmt.Println("Error fetching Google:", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
-	}
-
-	fmt.Println(string(body))
-}
+print("Hello from python")
 	`))
 
 	checkFatal(err, "Running code")
