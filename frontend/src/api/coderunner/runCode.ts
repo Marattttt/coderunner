@@ -2,7 +2,7 @@ import { z } from "zod";
 import { CODERUNNER_API_URL } from "../../constants";
 
 /*
- *errortype RunResult struct {
+ type RunResult struct {
 	ExitCode   int           `json:"exitCode"`
 	Stdout     string        `json:"stdout"`
 	Stderr     string        `json:"stderr"`
@@ -27,7 +27,7 @@ export interface CodeRunResponce {
 }
 
 export default async function runCode(code: string, lang: string): Promise<CodeRunResponce> {
-	const url = CODERUNNER_API_URL + '/run';
+	const url = CODERUNNER_API_URL + '/run/' + lang;
 
 	const body = {
 		code: code,
