@@ -5,7 +5,7 @@ export interface Language {
 
 export const Languages: Language[] = [
 	{ id: 'go', name: "Go" },
-	{ id: 'js', name: "JavaScript" }
+	{ id: 'py', name: "Python" }
 ]
 
 export const EditorUpdateDelay = 500;

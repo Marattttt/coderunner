@@ -1,8 +1,7 @@
 import React, { useRef, useState } from "react"
 import Prism from 'prismjs'
 import Editor from "react-simple-code-editor";
-import 'prismjs/components/prism-clike'
-import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-go'
 
 interface editorProps {
@@ -14,7 +13,7 @@ interface editorProps {
 
 const prismLanguages: Record<string, string> = {
 	'go': 'go',
-	'js': 'js',
+	'py': 'python',
 }
 
 const CodeEditor: React.FC<editorProps> = ({
@@ -36,17 +35,20 @@ const CodeEditor: React.FC<editorProps> = ({
 			textarea.focus();
 		}
 	};
+
+	const prismLang = prismLanguages[languageId]
+
 	const addHighlght = (code: string) => {
 		return Prism.highlight(
 			code,
-			Prism.languages[languageId],
-			languageId
+			Prism.languages[prismLang],
+			prismLang
 		);
 	}
 
 	return (
 		<div
-			className={(className ?? '') + ` font-code overflow-y-auto language-${prismLanguages[languageId]}`}
+			className={(className ?? '') + ` font-code overflow-y-auto language-${prismLang}`}
 			ref={containerRef}
 			onClick={handleContainerClick}
 		>
