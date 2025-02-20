@@ -22,6 +22,9 @@ SHELL ["/bin/bash", "-c"]
 
 WORKDIR /init 
 
+ARG PORT=80
+ENV PORT=${PORT}
+
 COPY ./scripts/init_container.sh ./
 RUN bash ./init_container.sh
 
