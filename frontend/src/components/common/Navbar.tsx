@@ -15,7 +15,7 @@ const Navbar = () => {
 			</Link>
 
 			<div className="flex gap-8 align-middle justify-center bg-none border-none font-bold text-lg" >
-				<Link to="/editor" className="m-auto">
+				<Link to="/" className="m-auto">
 					{t("nav.editor")}
 				</Link>
 				<EllipseSvg className="m-auto" />
