@@ -11,13 +11,12 @@ import (
 
 type AppConfig struct {
 	RunnerConig
-	Port     int    `env:"PORT,default=8080"`
-	ApiPrefix string `env:"API_PREFIX"`
+	Port      int    `env:"PORT,default=8080"`
 }
 
 type RunnerConig struct {
 	Go            *GoRunnerConfig `env:", prefix=GO_, noinit"`
-	Python *PyRunnerConfig `env:",prefix=PY_, noinit"`
+	Python        *PyRunnerConfig `env:",prefix=PY_, noinit"`
 	Enabled       []string        `env:"ENABLED_LANGS, required"`
 	EnvVars       []string        `env:"RUNTIME_ENVS,required"`
 	SafeUserNames []string        `env:"SAFE_USERNAMES"`
@@ -30,7 +29,6 @@ type GoRunnerConfig struct {
 type PyRunnerConfig struct {
 	RuntimeDir string `env:"RUNTIME_DIR"`
 }
-
 
 func Config(ctx context.Context) (*AppConfig, error) {
 	godotenv.Load()

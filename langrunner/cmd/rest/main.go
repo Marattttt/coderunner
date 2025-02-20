@@ -23,6 +23,7 @@ func main() {
 	checkFail(err, "Creating config")
 
 	logger := conf.CreateLogger()
+	runtimeManager := runner.NewRuntimeManager(&conf.RunnerConig, logger)
 
 	e := echo.New()
 	e.Use(
@@ -37,16 +38,46 @@ func main() {
 		}),
 	)
 
-	runtimeManager := runner.NewRuntimeManager(&conf.RunnerConig, logger)
-	e.POST("/run", runHandler(conf, logger, runtimeManager))
+	e.POST("/api/run/go", runGoHandler(conf, logger, runtimeManager))
+	e.POST("/api/run/py", runPyHandler(conf, logger, runtimeManager))
 
 	checkFail(
 		e.Start(fmt.Sprintf(":%d", conf.Port)),
 		"Running server",
 	)
 }
+func runPyHandler(conf *config.AppConfig, logger *slog.Logger, man *runner.RuntimeManager) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := c.Request().Context()
 
-func runHandler(conf *config.AppConfig, logger *slog.Logger, man *runner.RuntimeManager) echo.HandlerFunc {
+		pyrunner := runner.NewPyRunner(logger, *conf.Python, man)
+
+		var req models.CodeReq
+
+		if err := json.NewDecoder(c.Request().Body).Decode(&req); err != nil {
+			return echo.NewHTTPError(
+				http.StatusBadRequest,
+				map[string]string{"error": "bad request"},
+			)
+		}
+
+		res, err := pyrunner.RunCode(ctx, []byte(req.Code))
+		if err != nil {
+			logger.Error("Failed to run code", slog.String("code", req.Code), slog.String("err", err.Error()))
+			return c.JSON(
+				http.StatusInternalServerError,
+				map[string]string{"error": "internal"},
+			)
+		}
+
+		return c.JSON(
+			http.StatusOK,
+			res,
+		)
+	}
+}
+
+func runGoHandler(conf *config.AppConfig, logger *slog.Logger, man *runner.RuntimeManager) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 

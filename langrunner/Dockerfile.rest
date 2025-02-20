@@ -1,14 +1,4 @@
-FROM golang:1.23
-
-WORKDIR /init
-
-RUN apt-get update && apt-get install -y iptables
-
-COPY ./scripts/init_container.sh ./
-RUN bash ./init_container.sh
-
-COPY ./scripts/pre_start.sh ./
-RUN chmod +x ./pre_start.sh
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
@@ -16,6 +6,31 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build ./cmd/rest
+RUN go build -o ./server ./cmd/rest/main.go 
 
-ENTRYPOINT ["sh", "-c", "/init/pre_start.sh && ./rest"]
+FROM alpine:latest
+
+# Install bash, iptables, python, and golang
+RUN apk add --no-cache \
+	bash \
+	iptables \
+	python3 \
+	go
+
+# Set bash as the default shell
+SHELL ["/bin/bash", "-c"]
+
+WORKDIR /init 
+
+COPY ./scripts/init_container.sh ./
+RUN bash ./init_container.sh
+
+COPY ./scripts/pre_start.sh /init/pre_start.sh
+RUN chmod +x /init/pre_start.sh
+
+WORKDIR /app
+
+COPY --from=builder /app/server /app/server
+
+ENTRYPOINT ["bash", "-c", "/app/server"]
+# ENTRYPOINT ["bash", "-c", "/init/pre_start.sh && /app/server"]
