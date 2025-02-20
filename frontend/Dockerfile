@@ -5,8 +5,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
+ARG MODE=production
+ENV MODE=${MODE}
+
 COPY . .
-RUN npm run build
+RUN npm run build -- --mode=${MODE}
 
 # Production image
 FROM nginx:alpine
