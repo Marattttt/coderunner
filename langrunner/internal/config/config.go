@@ -11,14 +11,14 @@ import (
 
 type AppConfig struct {
 	RunnerConig
-	Port      int    `env:"PORT,default=8080"`
+	Port int `env:"PORT,default=8080"`
 }
 
 type RunnerConig struct {
-	Go            *GoRunnerConfig `env:", prefix=GO_, noinit"`
-	Python        *PyRunnerConfig `env:",prefix=PY_, noinit"`
+	Go            *GoRunnerConfig `env:", prefix=GO_"`
+	Python        *PyRunnerConfig `env:",prefix=PY_"`
 	Enabled       []string        `env:"ENABLED_LANGS, required"`
-	EnvVars       []string        `env:"RUNTIME_ENVS,required"`
+	EnvVars       []string        `env:"RUNTIME_ENVS"`
 	SafeUserNames []string        `env:"SAFE_USERNAMES"`
 }
 
