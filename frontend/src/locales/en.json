@@ -5,6 +5,10 @@
 		"about": "About"
 	},
 
+	"footer": {
+		"description": "Coderunner - a platform for running code"
+	},
+
 	"editor": {
 		"runbtn": "Run!"
 	},
