@@ -1,11 +1,11 @@
 import { useState } from "react";
-import ActionButton from "../components/common/ActionButton";
-import CodeEditor from "../components/features/CodeEditor";
-import LanguageSelect from "../components/features/LanguageSelect";
-import { Languages } from "../constants"
+import ActionButton from "../../components/common/ActionButton";
+import CodeEditor from "../../components/features/CodeEditor";
+import LanguageSelect from "../../components/features/LanguageSelect";
+import { Languages } from "../../constants"
 import { useQuery } from "@tanstack/react-query";
-import runCode from "../api/coderunner/runCode";
-import CodeOutput from "../components/features/CodeOutput";
+import runCode from "../../api/coderunner/runCode";
+import CodeOutput from "../../components/features/CodeOutput";
 import { useTranslation } from "react-i18next";
 
 const Editor = () => {
