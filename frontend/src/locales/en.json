@@ -72,6 +72,11 @@
 					}
 				]
 			}
-		]
+		],
+		"contacts": {
+			"title": "Contacts",
+			"github": "GitHub",
+			"telegram": "Telegram"
+		}
 	}
 }
