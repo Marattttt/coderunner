@@ -32,24 +32,27 @@ func NewGoRunner(logger *slog.Logger, conf config.GoRunnerConfig, manager *Runti
 	}
 }
 
-func (g *GoRunner) RunCode(ctx context.Context, code []byte) (*RunResult, error) {
-	g.Logger.Debug(
+func (gr *GoRunner) RunCode(ctx context.Context, code []byte) (*RunResult, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(gr.Manager.conf.ExecTimeoutMs * 1e6))
+	defer cancel()
+
+	gr.Logger.Debug(
 		"Using scripts",
 		slog.String("init", string(GoInitScript)),
 		slog.String("run", string(GoRunScript)),
 	)
 
-	u, err := g.Manager.AcquireUserWait(ctx)
+	u, err := gr.Manager.AcquireUserWait(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("aqcuiring user: %w", err)
 	}
-	defer g.Manager.ReleaseUser(u)
+	defer gr.Manager.ReleaseUser(u)
 
-	if err = g.initCurrenntDir(ctx, u, code); err != nil {
+	if err = gr.initCurrenntDir(ctx, u, code); err != nil {
 		return nil, err
 	}
 
-	res, err := g.runCurrentDir(ctx, u)
+	res, err := gr.runCurrentDir(ctx, u)
 	if err != nil {
 		return nil, fmt.Errorf("running: %w", err)
 	}

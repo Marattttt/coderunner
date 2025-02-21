@@ -22,7 +22,8 @@ func main() {
 	runner := runner.PyRunner{Conf: *conf.Python, Manager: manager, Logger: appLogger}
 
 	res, err := runner.RunCode(appCtx, []byte(`
-print("Hello from python")
+import time
+time.sleep(2)
 	`))
 
 	checkFatal(err, "Running code")

@@ -20,6 +20,7 @@ type RunnerConig struct {
 	Enabled       []string        `env:"ENABLED_LANGS, required"`
 	EnvVars       []string        `env:"RUNTIME_ENVS"`
 	SafeUserNames []string        `env:"SAFE_USERNAMES"`
+	ExecTimeoutMs int             `env:"RUN_TIMEOUT, default=3000"`
 }
 
 type GoRunnerConfig struct {

@@ -32,24 +32,27 @@ func NewPyRunner(logger *slog.Logger, conf config.PyRunnerConfig, manager *Runti
 	}
 }
 
-func (g *PyRunner) RunCode(ctx context.Context, code []byte) (*RunResult, error) {
-	g.Logger.Debug(
+func (pr *PyRunner) RunCode(ctx context.Context, code []byte) (*RunResult, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(pr.Manager.conf.ExecTimeoutMs*1e6))
+	defer cancel()
+
+	pr.Logger.Debug(
 		"Using scripts",
 		slog.String("init", string(PyInitScript)),
 		slog.String("run", string(PyRunScript)),
 	)
 
-	u, err := g.Manager.AcquireUserWait(ctx)
+	u, err := pr.Manager.AcquireUserWait(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("aqcuiring user: %w", err)
 	}
-	defer g.Manager.ReleaseUser(u)
+	defer pr.Manager.ReleaseUser(u)
 
-	if err = g.initCurrenntDir(ctx, u, code); err != nil {
+	if err = pr.initCurrenntDir(ctx, u, code); err != nil {
 		return nil, err
 	}
 
-	res, err := g.runCurrentDir(ctx, u)
+	res, err := pr.runCurrentDir(ctx, u)
 	if err != nil {
 		return nil, fmt.Errorf("running: %w", err)
 	}
