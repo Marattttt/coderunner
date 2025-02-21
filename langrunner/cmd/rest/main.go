@@ -22,6 +22,8 @@ func main() {
 	logger := conf.CreateLogger()
 	runtimeManager := runner.NewRuntimeManager(&conf.RunnerConig, logger)
 
+	logger.Info("Created config", slog.Any("config", *conf))
+
 	e := echo.New()
 	e.Use(
 		handlerParentContextMiddeware(ctx),
