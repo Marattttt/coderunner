@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -14,8 +15,16 @@ import (
 )
 
 func applyRoutes(e *echo.Echo, conf *config.AppConfig, logger *slog.Logger, runtimeManager *runner.RuntimeManager) {
-	e.POST("/api/run/go", runGoHandler(conf, logger, runtimeManager))
-	e.POST("/api/run/py", runPyHandler(conf, logger, runtimeManager))
+	for _, lang := range conf.Enabled {
+		switch lang {
+		case "go":
+			e.POST("/api/run/go", runGoHandler(conf, logger, runtimeManager))
+		case "py":
+			e.POST("/api/run/py", runPyHandler(conf, logger, runtimeManager))
+		default: 
+			panic(fmt.Sprintf("Cannot create route for language %s", lang))
+		}
+	}
 }
 
 func runPyHandler(conf *config.AppConfig, logger *slog.Logger, man *runner.RuntimeManager) echo.HandlerFunc {
