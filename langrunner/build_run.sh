@@ -15,8 +15,8 @@ if [[ "$MODE" == "cli" ]]; then
     docker run --cap-add=NET_ADMIN --env-file .env runnercli:latest
 elif [[ "$MODE" == "rest" ]]; then
     echo "Running in REST mode..."
-    docker build . -f Dockerfile.rest -t runnerrest
-    docker run -p 8080:8080 --cap-add=NET_ADMIN --env-file .env runnerrest:latest
+    docker build . -f Dockerfile.rest.full -t runnerrest
+    docker run -p 8080:80 --cap-add=NET_ADMIN --env-file .env runnerrest:latest
 else
     echo "Invalid argument: $MODE"
     echo "Usage: $0 <cli|rest>"

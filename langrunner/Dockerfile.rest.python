@@ -8,14 +8,12 @@ RUN go mod download
 COPY . .
 RUN go build -o ./server ./cmd/rest/main.go 
 
-FROM alpine:latest
+FROM python:3.12-alpine
 
 # Install bash, iptables, python, and golang
 RUN apk add --no-cache \
 	bash \
-	iptables \
-	python3 \
-	go
+	iptables
 
 # Set bash as the default shell
 SHELL ["/bin/bash", "-c"]
@@ -36,4 +34,3 @@ WORKDIR /app
 COPY --from=builder /app/server /app/server
 
 ENTRYPOINT ["bash", "-c", "/app/server"]
-# ENTRYPOINT ["bash", "-c", "/init/pre_start.sh && /app/server"]
