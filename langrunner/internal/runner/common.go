@@ -43,22 +43,21 @@ type commandOutput struct {
 func readStdoutStderr(ctx context.Context, env *SecureEnv) (*commandOutput, error) {
 	var outBuf, errBuf bytes.Buffer
 	var wg sync.WaitGroup
-	var outErr, errErr error
+	var stdoutErr, stderrErr error
 
-	// Start copying output in separate goroutines
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		_, outErr = io.Copy(&outBuf, env.StdOutPipe)
+		_, stdoutErr = io.Copy(&outBuf, env.StdOutPipe)
 	}()
 	go func() {
 		defer wg.Done()
-		_, errErr = io.Copy(&errBuf, env.StdErrPipe)
+		_, stderrErr = io.Copy(&errBuf, env.StdErrPipe)
 	}()
 
-	// Create channel for command completion
 	cmdErrCh := make(chan error, 1)
 	go func() {
+		wg.Wait()
 		err := env.Cmd.Wait()
 		if err != nil {
 			var exitErr *exec.ExitError
@@ -74,25 +73,20 @@ func readStdoutStderr(ctx context.Context, env *SecureEnv) (*commandOutput, erro
 	var cmdErr error
 	select {
 	case cmdErr = <-cmdErrCh:
-		// Command completed
+		break
 	case <-ctx.Done():
 		// Try to kill the process if context is cancelled
 		_ = env.Cmd.Process.Kill()
 		return nil, fmt.Errorf("ctx cancelled: %w", ctx.Err())
 	}
 
-	// Wait for output copying to complete
-	wg.Wait()
-
-	// Check for pipe reading errors
-	if outErr != nil {
-		return nil, fmt.Errorf("reading stdout: %w", outErr)
+	if stdoutErr != nil {
+		return nil, fmt.Errorf("reading stdout: %w", stdoutErr)
 	}
-	if errErr != nil {
-		return nil, fmt.Errorf("reading stderr: %w", errErr)
+	if stderrErr != nil {
+		return nil, fmt.Errorf("reading stderr: %w", stderrErr)
 	}
 
-	// If command error occurred, wrap it
 	if cmdErr != nil {
 		cmdErr = fmt.Errorf("waiting for cmd execution: %w", cmdErr)
 	}
