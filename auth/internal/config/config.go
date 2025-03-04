@@ -1,23 +1,24 @@
 package config
 
 import (
-	"os"
+	"fmt"
 
+	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
 )
 
-const (
-	ENV_DB_POSTGRESURI   = "PG_URI"
-	ENV_DB_MIGRATIONSURI = "MIGRATIONS_URI"
-)
-
 type AppConfig struct {
-	DB DBConfig
+	DB   DBConfig
+	Port int `env:"PORT" envDefault:"8080"`
+}
+
+func (a AppConfig) GetListenAddr() string {
+	return fmt.Sprintf(":%d", a.Port)
 }
 
 type DBConfig struct {
-	PostgresURI   string
-	MigrationsURI string
+	PostgresURI   string `env:"PG_URI"`
+	MigrationsURI string `env:"MIGRATIONS_URI"`
 }
 
 func Config() (*AppConfig, error) {
@@ -25,25 +26,10 @@ func Config() (*AppConfig, error) {
 
 	var conf AppConfig
 
-	pguri := os.Getenv(ENV_DB_POSTGRESURI)
-	if pguri == "" {
-		return nil, EnvNotSetOrEmptyError{ENV_DB_POSTGRESURI}
+	err := env.Parse(&conf)
+	if err != nil {
+		return nil, err
 	}
-	conf.DB.PostgresURI = pguri
-
-	migrations := os.Getenv(ENV_DB_MIGRATIONSURI)
-	if migrations == "" {
-		return nil, EnvNotSetOrEmptyError{ENV_DB_MIGRATIONSURI}
-	}
-	conf.DB.MigrationsURI = migrations
 
 	return &conf, nil
-}
-
-type EnvNotSetOrEmptyError struct {
-	EnvName string
-}
-
-func (e EnvNotSetOrEmptyError) Error() string {
-	return "Env variable not set or empty: " + e.EnvName
 }

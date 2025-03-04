@@ -9,16 +9,38 @@ import (
 
 	"github.com/Marattttt/new_new_portfolio/auth/internal/config"
 	"github.com/Marattttt/new_new_portfolio/auth/internal/db"
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	start := time.Now()
+	ctx, cancel, conf := setup()
+	defer cancel()
 
+	logger := slog.Default()
+
+	e := echo.New()
+	applyMiddleware(ctx, conf, logger, e)
+	applyRoutes(conf, e)
+
+	go func() {
+		e.Start(conf.GetListenAddr())
+	}()
+
+	<-ctx.Done()
+
+	downCtx, downCancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer downCancel()
+
+	logger.Info("Began shutdown")
+
+	e.Shutdown(downCtx)
+}
+
+func setup() (context.Context, func(), *config.AppConfig) {
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),
 		os.Interrupt,
 	)
-	defer cancel()
 
 	conf, err := config.Config()
 	checkFatal(err, "Creating config")
@@ -26,10 +48,7 @@ func main() {
 	err = db.Migrate(ctx, &conf.DB)
 	checkFatal(err, "Applying migrations")
 
-	slog.Info(
-		"Migrations applied successfully",
-		slog.Duration("took", time.Now().Sub(start)),
-	)
+	return ctx, cancel, conf
 }
 
 func checkFatal(err error, msg string, extra ...any) {
