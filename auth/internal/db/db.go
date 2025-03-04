@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/Marattttt/new_new_portfolio/auth/internal/config"
-	"github.com/Marattttt/new_new_portfolio/auth/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/Marattttt/new_new_portfolio/auth/internal/config"
+	"github.com/Marattttt/new_new_portfolio/auth/pkg/models"
 )
 
 type UsersRepository struct {
