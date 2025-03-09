@@ -8,12 +8,24 @@ import (
 )
 
 type AppConfig struct {
-	DB   DBConfig
-	Port int `env:"PORT" envDefault:"8080"`
+	DB    DBConfig
+	OAuth OAuthConfig
+	Port  int `env:"PORT" envDefault:"8080"`
 }
 
 func (a AppConfig) GetListenAddr() string {
 	return fmt.Sprintf(":%d", a.Port)
+}
+
+type OAuthConfig struct {
+	Google GoogleAuthConfig
+}
+
+type GoogleAuthConfig struct {
+	ClientID     string   `env:"G_CLIENT_ID"`
+	Redirect     string   `env:"G_REDIRECT_URL"`
+	ClientSecret string   `env:"G_CLIENT_SECRET"`
+	Scopes       []string `env:"G_OAUTH_SCOPES"`
 }
 
 type DBConfig struct {
