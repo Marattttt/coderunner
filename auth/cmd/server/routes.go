@@ -12,8 +12,8 @@ import (
 func applyRoutes(conf *config.AppConfig, e *echo.Echo) {
 	stateProvider := auth.NewInMemoryStateProvider()
 
-	e.GET("/auth/login/google", handleLoginGoogle(conf, stateProvider))
-	e.GET("/auth/callback/google", handleCallbackGoogle(conf, stateProvider))
+	e.GET("/login/google", handleLoginGoogle(conf, stateProvider))
+	e.GET("/callback/google", handleCallbackGoogle(conf, stateProvider))
 }
 
 func handleLoginGoogle(conf *config.AppConfig, stateProvider auth.StateProvider) func(echo.Context) error {
