@@ -18,6 +18,11 @@ func main() {
 
 	logger := slog.Default()
 
+	logger.Info("Created config", slog.Any("config", *conf))
+
+	err := db.Migrate(ctx, &conf.DB)
+	checkFatal(err, "Applying migrations")
+
 	e := echo.New()
 	applyMiddleware(ctx, conf, logger, e)
 	applyRoutes(conf, e)
@@ -44,9 +49,6 @@ func setup() (context.Context, func(), *config.AppConfig) {
 
 	conf, err := config.Config()
 	checkFatal(err, "Creating config")
-
-	err = db.Migrate(ctx, &conf.DB)
-	checkFatal(err, "Applying migrations")
 
 	return ctx, cancel, conf
 }

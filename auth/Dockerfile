@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY . .
+COPY ./ ./
 
 RUN go build -o /app/server ./cmd/server/
 
@@ -15,6 +15,11 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/server .
-COPY migrations/ .
+
+COPY ./migrations ./migrations
+
+RUN ls migrations
+
+ENV PORT=80
 
 ENTRYPOINT ["/app/server"]

@@ -42,7 +42,7 @@ func (g googleAuth) getUserInfo(ctx context.Context, code string) (*models.User,
 	}
 	defer resp.Body.Close()
 
-	userInfo := make(map[string]string)
+	userInfo := make(map[string]any)
 
 	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
@@ -57,13 +57,13 @@ func (g googleAuth) getUserInfo(ctx context.Context, code string) (*models.User,
 
 func (g googleAuth) parseUserInfo(
 	token *oauth2.Token,
-	userInfo map[string]string,
+	userInfo map[string]any,
 ) (
 	*models.User, error,
 ) {
 	user := &models.User{
-		Email: userInfo["email"],
-		Name:  userInfo["name"],
+		Email: userInfo["email"].(string),
+		Name:  userInfo["name"].(string),
 	}
 
 	if user.Name == "" || user.Email == "" {

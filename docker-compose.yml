@@ -8,8 +8,22 @@ services:
       - coderunner-logs:/var/log/nginx
     depends_on:
       - front
+      - auth
       - gorunner
       - pyrunner
+    networks:
+      - app_network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: coderunner
+    volumes:
+      - coderunner-data:/var/lib/postgresql/data
     networks:
       - app_network
 
@@ -23,14 +37,30 @@ services:
     depends_on:
       - gorunner
       - pyrunner
+      - auth
     networks:
       - app_network
-
     develop:
       watch: 
         - path: frontend
           action: rebuild
 
+  auth: 
+    container_name: auth
+    build: 
+      context: auth
+    networks:
+      - app_network
+    env_file: auth.env
+    depends_on: 
+      - postgres
+    restart: on-failure
+
+    develop: 
+      watch: 
+        - path: auth
+          action: rebuild
+    
   gorunner:
     container_name: gorunner
     build:
@@ -71,3 +101,4 @@ networks:
 
 volumes:
   coderunner-logs:
+  coderunner-data:
