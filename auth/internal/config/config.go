@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
@@ -10,11 +12,26 @@ import (
 type AppConfig struct {
 	DB    DBConfig
 	OAuth OAuthConfig
-	Port  int `env:"PORT" envDefault:"8080"`
+	Port  int    `env:"PORT" envDefault:"8080"`
+	Mode  string `env:"MODE" envDefault:"development"`
 }
 
-func (a AppConfig) GetListenAddr() string {
+func (a *AppConfig) GetListenAddr() string {
 	return fmt.Sprintf(":%d", a.Port)
+}
+
+func (a *AppConfig) MakeLogger() *slog.Logger {
+	var handler slog.Handler
+
+	if a.Mode == "development" {
+		handler = slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		})
+	} else {
+		handler = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{})
+	}
+
+	return slog.New(handler)
 }
 
 type OAuthConfig struct {
@@ -22,9 +39,9 @@ type OAuthConfig struct {
 }
 
 type GoogleAuthConfig struct {
-	ClientID     string   `env:"G_CLIENT_ID"`
+	ClientID     string   `env:"G_CLIENT_ID,unset"`
 	Redirect     string   `env:"G_REDIRECT_URL"`
-	ClientSecret string   `env:"G_CLIENT_SECRET"`
+	ClientSecret string   `env:"G_CLIENT_SECRET,unset"`
 	Scopes       []string `env:"G_OAUTH_SCOPES"`
 }
 

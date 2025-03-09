@@ -16,7 +16,7 @@ func main() {
 	ctx, cancel, conf := setup()
 	defer cancel()
 
-	logger := slog.Default()
+	logger := conf.MakeLogger()
 
 	logger.Info("Created config", slog.Any("config", *conf))
 
