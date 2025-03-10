@@ -10,10 +10,12 @@ import (
 )
 
 type AppConfig struct {
-	DB    DBConfig
-	OAuth OAuthConfig
-	Port  int    `env:"PORT" envDefault:"8080"`
-	Mode  string `env:"MODE" envDefault:"development"`
+	DB                 DBConfig
+	OAuth              OAuthConfig
+	Port               int    `env:"PORT" envDefault:"8080"`
+	Mode               string `env:"MODE" envDefault:"development"`
+	JWTSecret          string `env:"JWT_SECRET,unset"`
+	JWTAccessExprirySecs int    `env:"JWT_ACCESS_EXPIRY" envDefault:"1440"`
 }
 
 func (a *AppConfig) GetListenAddr() string {
