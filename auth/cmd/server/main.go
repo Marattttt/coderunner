@@ -23,9 +23,12 @@ func main() {
 	err := db.Migrate(ctx, &conf.DB)
 	checkFatal(err, "Applying migrations")
 
+	dbconn, err := db.Connect(&conf.DB)
+	checkFatal(err, "Connecting to db")
+
 	e := echo.New()
 	applyMiddleware(ctx, conf, logger, e)
-	applyRoutes(conf, e)
+	applyRoutes(conf, e, UsersProviderFromDBConnn(dbconn))
 
 	go func() {
 		e.Start(conf.GetListenAddr())

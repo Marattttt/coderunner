@@ -18,6 +18,11 @@ services:
     image: postgres:latest
     container_name: postgres
     restart: always
+
+    # Used for debug in development
+    ports:
+      - "5432:5432"
+
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: pass

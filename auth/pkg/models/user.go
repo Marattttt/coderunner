@@ -6,9 +6,9 @@ import (
 )
 
 type User struct {
-	ID        int
+	ID        int `gorm:"primaryKey"`
 	Name      string
-	Email string
+	Email     string
 	CreatedAt time.Time
 	DeletedAt sql.NullTime
 	Google    *GoogleOauth

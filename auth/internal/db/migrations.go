@@ -3,6 +3,8 @@ package db
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -12,6 +14,10 @@ import (
 )
 
 func Migrate(ctx context.Context, conf *config.DBConfig) error {
+	defer func(from time.Time) {
+		slog.Info("Finished migrations", slog.Duration("took", time.Now().Sub(from)))
+	}(time.Now())
+
 	m, err := migrate.New(conf.MigrationsURI, conf.PostgresURI)
 	if err != nil {
 		return fmt.Errorf("initializing: %w", err)

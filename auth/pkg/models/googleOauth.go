@@ -5,7 +5,8 @@ import (
 )
 
 type GoogleOauth struct {
-	UserId       int
+	ID           int `gorm:"primaryKey"`
+	UserID       int `json:"-"`
 	AccessToken  string
 	RefreshToken string
 	Expiry       time.Time
