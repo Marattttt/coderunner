@@ -17,7 +17,7 @@ var ErrNotFound = fmt.Errorf("not found")
 
 type DBConn struct{ gorm *gorm.DB }
 
-func Connect(conf *config.DBConfig) (*DBConn, error) {
+func ConnectDB(conf *config.DBConfig) (*DBConn, error) {
 	gormConf := gorm.Config{}
 	db, err := gorm.Open(postgres.Open(conf.PostgresURI), &gormConf)
 

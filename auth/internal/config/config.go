@@ -49,6 +49,7 @@ type GoogleAuthConfig struct {
 
 type DBConfig struct {
 	PostgresURI   string `env:"PG_URI"`
+	RedisTokenURI string `env:"REDIS_TOKEN_URI"`
 	MigrationsURI string `env:"MIGRATIONS_URI"`
 }
 

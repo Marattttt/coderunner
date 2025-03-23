@@ -23,16 +23,23 @@ func main() {
 	err := db.Migrate(ctx, &conf.DB)
 	checkFatal(err, "Applying migrations")
 
-	dbconn, err := db.Connect(&conf.DB)
+	dbconn, err := db.ConnectDB(&conf.DB)
 	checkFatal(err, "Connecting to db")
+
+	// Check redis connectivity
+	redconn, err := db.ConnectRedis(&conf.DB)
+	checkFatal(err, "Connecting to redis")
 
 	e := echo.New()
 	applyMiddleware(ctx, conf, logger, e)
-	applyRoutes(conf, e, UsersProviderFromDBConnn(dbconn))
+	applyRoutes(
+		conf,
+		e,
+		UsersProviderFromDBConnn(dbconn),
+		TokensProviderFromRedisConn(redconn),
+	)
 
-	go func() {
-		e.Start(conf.GetListenAddr())
-	}()
+	go e.Start(conf.GetListenAddr())
 
 	<-ctx.Done()
 

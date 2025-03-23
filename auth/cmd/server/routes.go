@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/Marattttt/new_new_portfolio/auth/internal/auth"
 	"github.com/Marattttt/new_new_portfolio/auth/internal/config"
@@ -27,7 +28,22 @@ func UsersProviderFromDBConnn(conn *db.DBConn) UsersProvider {
 	}
 }
 
-func applyRoutes(conf *config.AppConfig, e *echo.Echo, userProvider UsersProvider) {
+type TokensProvider func(*slog.Logger) TokensRepo
+
+type TokensRepo interface {
+	SaveRefresh(ctx context.Context, tok string, ttl time.Duration) error
+	SaveAccess(ctx context.Context, tok string, ttl time.Duration) error
+	ConsumeRefresh(ctx context.Context, tok string) (bool, error)
+	ConsumeAccess(ctx context.Context, tok string) (bool, error)
+}
+
+func TokensProviderFromRedisConn(conn *db.RedisConnn) TokensProvider {
+	return func(logger *slog.Logger) TokensRepo {
+		return db.NewRedisTokenStore(conn, logger)
+	}
+}
+
+func applyRoutes(conf *config.AppConfig, e *echo.Echo, userProvider UsersProvider, tokensProvider TokensProvider) {
 	stateProvider := auth.NewInMemoryStateProvider()
 
 	e.GET("/login", handleLogin(conf))

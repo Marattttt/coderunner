@@ -32,6 +32,16 @@ services:
     networks:
       - app_network
 
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - coderunner-redis-data:/data
+
   front:
     container_name: front
     build:
@@ -59,6 +69,7 @@ services:
     env_file: auth.env
     depends_on: 
       - postgres
+      - redis
     restart: on-failure
 
     develop: 
@@ -107,3 +118,4 @@ networks:
 volumes:
   coderunner-logs:
   coderunner-data:
+  coderunner-redis-data:
