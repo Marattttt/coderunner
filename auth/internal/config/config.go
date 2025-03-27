@@ -10,12 +10,14 @@ import (
 )
 
 type AppConfig struct {
-	DB                 DBConfig
-	OAuth              OAuthConfig
-	Port               int    `env:"PORT" envDefault:"8080"`
-	Mode               string `env:"MODE" envDefault:"development"`
-	JWTSecret          string `env:"JWT_SECRET,unset"`
-	JWTAccessExprirySecs int    `env:"JWT_ACCESS_EXPIRY" envDefault:"1440"`
+	DB                   DBConfig
+	OAuth                OAuthConfig
+	Port                 int    `env:"PORT" envDefault:"8080"`
+	Mode                 string `env:"MODE" envDefault:"development"`
+	JWTSecret            string `env:"JWT_SECRET,unset"`
+	JWTAccessExprirySecs int64  `env:"JWT_ACCESS_EXPIRY" envDefault:"1440"`
+	// Default is one month
+	JWTRefreshExprirySecs int64 `env:"JWT_ACCESS_EXPIRY" envDefault:"2592000"`
 }
 
 func (a *AppConfig) GetListenAddr() string {
@@ -37,7 +39,8 @@ func (a *AppConfig) MakeLogger() *slog.Logger {
 }
 
 type OAuthConfig struct {
-	Google GoogleAuthConfig
+	Google                  GoogleAuthConfig
+	AccessCodeExpirySeconds int `env:"OAUTH_CODE_TTL"`
 }
 
 type GoogleAuthConfig struct {
@@ -49,7 +52,7 @@ type GoogleAuthConfig struct {
 
 type DBConfig struct {
 	PostgresURI   string `env:"PG_URI"`
-	RedisTokenURI string `env:"REDIS_TOKEN_URI"`
+	RedisURI      string `env:"REDIS_URI"`
 	MigrationsURI string `env:"MIGRATIONS_URI"`
 }
 

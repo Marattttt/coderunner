@@ -16,10 +16,29 @@ type Claims struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Provider string `json:"provider"`
+	TokType  string `json:"tokType"`
 	jwt.RegisteredClaims
 }
 
-func ClaimsFromUser(conf *config.AppConfig, u models.User) Claims {
+type TokType int
+
+const (
+	TokTypeAccess TokType = iota
+	TokTypeRefresh
+)
+
+func (t TokType) String() string {
+	switch t {
+	case TokTypeAccess:
+		return "access"
+	case TokTypeRefresh:
+		return "refresh"
+	default:
+		panic(fmt.Sprintf("%d is not a valid value for enum auth.TokType", t))
+	}
+}
+
+func ClaimsFromUser(conf *config.AppConfig, u *models.User, toktype TokType) Claims {
 	provider := "none"
 
 	if u.Google != nil {
@@ -28,13 +47,14 @@ func ClaimsFromUser(conf *config.AppConfig, u models.User) Claims {
 
 	expiry := time.Now().Add(
 		time.Duration(
-			conf.JWTAccessExprirySecs * 1e6))
+			conf.JWTAccessExprirySecs * 1e9))
 
 	return Claims{
 		UserID:   u.ID,
 		Name:     u.Name,
 		Email:    u.Email,
 		Provider: provider,
+		TokType:  toktype.String(),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expiry),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -43,13 +63,17 @@ func ClaimsFromUser(conf *config.AppConfig, u models.User) Claims {
 	}
 }
 
-func JWTGenerate(conf *config.AppConfig, u models.User) (string, error) {
-	claims := ClaimsFromUser(conf, u)
+func JWTGenerateAccess(conf *config.AppConfig, u *models.User) (string, error) {
+	claims := ClaimsFromUser(conf, u, TokTypeAccess)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signed, err := token.SignedString([]byte(conf.JWTSecret))
+	return signed, err
+}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-
-	signed, err := token.SignedString(conf.JWTSecret)
-
+func JWTGenerateRefresh(conf *config.AppConfig, u *models.User) (string, error) {
+	claims := ClaimsFromUser(conf, u, TokTypeRefresh)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signed, err := token.SignedString([]byte(conf.JWTSecret))
 	return signed, err
 }
 

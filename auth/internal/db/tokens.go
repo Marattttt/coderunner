@@ -13,7 +13,7 @@ import (
 type RedisConnn struct{ client *redis.Client }
 
 func ConnectRedis(conf *config.DBConfig) (*RedisConnn, error) {
-	opts, err := redis.ParseURL(conf.RedisTokenURI)
+	opts, err := redis.ParseURL(conf.RedisURI)
 	if err != nil {
 		return nil, fmt.Errorf("parsing url: %w", err)
 	}
@@ -26,23 +26,25 @@ const (
 )
 
 type RedisTokenStore struct {
+	conf   *config.AppConfig
 	client *redis.Client
 	logger *slog.Logger
 }
 
-func NewRedisTokenStore(conn *RedisConnn, logger *slog.Logger) RedisTokenStore {
+func NewRedisTokenStore(conf *config.AppConfig, conn *RedisConnn, logger *slog.Logger) RedisTokenStore {
 	return RedisTokenStore{
+		conf:   conf,
 		client: conn.client,
 		logger: logger,
 	}
 }
 
-func (r RedisTokenStore) SaveRefresh(ctx context.Context, tok string, ttl time.Duration) error {
-	return r.saveTok(ctx, tok, refreshPrefix, ttl)
+func (r RedisTokenStore) SaveRefresh(ctx context.Context, tok string) error {
+	return r.saveTok(ctx, tok, refreshPrefix, time.Duration(r.conf.JWTRefreshExprirySecs))
 }
 
-func (r RedisTokenStore) SaveAccess(ctx context.Context, tok string, ttl time.Duration) error {
-	return r.saveTok(ctx, tok, accessPrefix, ttl)
+func (r RedisTokenStore) SaveAccess(ctx context.Context, tok string) error {
+	return r.saveTok(ctx, tok, accessPrefix,  time.Duration(r.conf.JWTAccessExprirySecs))
 }
 
 // If the token exists, it gets deleted and true is returned

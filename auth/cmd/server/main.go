@@ -26,7 +26,6 @@ func main() {
 	dbconn, err := db.ConnectDB(&conf.DB)
 	checkFatal(err, "Connecting to db")
 
-	// Check redis connectivity
 	redconn, err := db.ConnectRedis(&conf.DB)
 	checkFatal(err, "Connecting to redis")
 
@@ -36,7 +35,8 @@ func main() {
 		conf,
 		e,
 		UsersProviderFromDBConnn(dbconn),
-		TokensProviderFromRedisConn(redconn),
+		TokensProviderFromRedisConn(conf, redconn),
+		CodesProviderFromRedisConn( redconn),
 	)
 
 	go e.Start(conf.GetListenAddr())

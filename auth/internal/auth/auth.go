@@ -43,13 +43,13 @@ func NewService(conf *config.OAuthConfig, sp StateProvider, logger *slog.Logger)
 	}
 }
 
-func (s Service) GenerateLoginURL(resource OAuthResourceServer) string {
+func (s Service) GenerateLoginURL(resource OAuthResourceServer) (string) {
 	switch resource {
 	case GoogleResourceServer:
 		s.logger.Debug("Using google resource provider")
 		state := s.state.GenerateState(GoogleResourceServer)
 		url := s.google.generateLoginURL(state)
-		return url
+		return  url
 
 	default:
 		panic(fmt.Sprintf("no such OAuthResourceServer: %d", resource))
